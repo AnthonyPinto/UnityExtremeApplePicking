@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject Body;
+
     float rotationSpeedDegPerSec = 180;
     float speedUnitPerSec = 5;
 
     float horizontalAxis = 0;
     float verticalAxis = 0;
+
+    float lastInputStrength = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +29,19 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Rotate(horizontalAxis * Vector3.up * rotationSpeedDegPerSec * Time.fixedDeltaTime);
-        transform.Translate(verticalAxis * Vector3.forward * speedUnitPerSec * Time.fixedDeltaTime);
+        //transform.Rotate(horizontalAxis * Vector3.up * rotationSpeedDegPerSec * Time.fixedDeltaTime);
+        //transform.Translate(verticalAxis * Vector3.forward * speedUnitPerSec * Time.fixedDeltaTime);
+
+        float inputStrength = Mathf.Max(Mathf.Abs(horizontalAxis), Mathf.Abs(verticalAxis));
+
+
+        Vector3 direction = new Vector3(horizontalAxis, 0, verticalAxis).normalized;
+        transform.Translate(direction * inputStrength * speedUnitPerSec * Time.fixedDeltaTime);
+        if (inputStrength >= lastInputStrength)
+        {
+            Body.transform.LookAt(transform.position + direction);
+        }
+
+        lastInputStrength = inputStrength;
     }
 }
