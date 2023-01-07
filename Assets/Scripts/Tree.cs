@@ -15,10 +15,67 @@ public class Tree : MonoBehaviour
     float maxAppleDelay = 1;
     int maxSimultaneousApples = 4;
 
+
+
+
+    Vector3 prevPosition;
+    Vector3 latestPostion;
+
+    float angleCheckRate = 0.1f;
+    float maxTrunkAngle = 45f;
+    float maxTrunkAngleSpeed = 5;
+
+    float timeOfLastCheck = 0;
+    Quaternion rotationAtLastCheck;
+    GameObject nextRotationObj;
+
+
+
+
+    IEnumerator UpdateTiltRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(angleCheckRate);
+
+            rotationAtLastCheck = transform.rotation;
+
+            float distanceTraveled = (latestPostion - prevPosition).magnitude;
+            float speed = distanceTraveled / angleCheckRate;
+            //Debug.Log("dist: " + distanceTraveled + " | speed: " + speed);
+            //Debug.Log("prevPos :" + prevPosition + " | newPos: " + transform.position);
+
+            float percentOfMaxAngle = Mathf.Max(speed / maxTrunkAngleSpeed) / maxTrunkAngleSpeed;
+            float angleToApply = maxTrunkAngle * percentOfMaxAngle;
+
+
+            nextRotationObj.transform.SetPositionAndRotation(transform.position, transform.rotation);
+
+
+            nextRotationObj.transform.LookAt(prevPosition);
+            Vector3 newAngles = nextRotationObj.transform.localEulerAngles;
+            newAngles.x = angleToApply;
+            nextRotationObj.transform.localEulerAngles = newAngles;
+
+
+            prevPosition = latestPostion;
+            latestPostion = transform.position;
+            timeOfLastCheck = Time.time;
+
+        }
+    }
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        nextRotationObj = new GameObject();
+
+        prevPosition = transform.position;
+        latestPostion = transform.position;
+
+        StartCoroutine(UpdateTiltRoutine());
     }
 
     // Update is called once per frame
@@ -50,6 +107,13 @@ public class Tree : MonoBehaviour
                 nextAppleWait = Random.Range(minAppleDelay, maxAppleDelay);
             }
         }
+
+        float timeSinceLastCheck = Time.time - timeOfLastCheck;
+        float percentComplete = (timeSinceLastCheck / angleCheckRate);
+
+
+        transform.rotation = Quaternion.Slerp(rotationAtLastCheck, nextRotationObj.transform.rotation, percentComplete);
+
     }
 
     void SpawnApples()
