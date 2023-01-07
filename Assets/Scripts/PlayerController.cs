@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class PlayerController : MonoBehaviour
 {
     public GameObject Body;
 
-    float rotationSpeedDegPerSec = 180;
+    float rotationSpeedDegPerSec = 720;
     float AccelUnitPerSec = 40f;
     float maxSpeedUnitsPerSec = 10f;
 
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     float lastInputStrength = 0;
     Vector3 lastSpeed = Vector3.zero;
+    Vector3 lastDirection = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -49,13 +51,22 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.Translate(newSpeed * Time.fixedDeltaTime);
-        if (inputStrength >= lastInputStrength)
+        if (inputStrength > 0 && inputStrength >= lastInputStrength)
         {
-            Body.transform.LookAt(transform.position + direction);
+            
+            Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            Quaternion newRotation = Quaternion.RotateTowards(Body.transform.rotation, targetRotation, rotationSpeedDegPerSec * Time.fixedDeltaTime);
+            Body.transform.rotation = newRotation;
         }
 
         lastInputStrength = inputStrength;
         lastSpeed = newSpeed;
+        lastDirection = direction;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Handles.DrawLine(transform.position, transform.position + lastDirection);
     }
 
     // Add brakes if no longer going a direction
