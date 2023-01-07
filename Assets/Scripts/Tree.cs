@@ -22,7 +22,7 @@ public class Tree : MonoBehaviour
     Vector3 latestPostion;
 
     float angleCheckRate = 0.1f;
-    float maxTrunkAngle = 45f;
+    float maxTrunkAngle = 90f;
     float maxTrunkAngleSpeed = 5;
 
     float timeOfLastCheck = 0;
