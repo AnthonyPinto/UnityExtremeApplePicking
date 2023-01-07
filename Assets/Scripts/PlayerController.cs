@@ -22,6 +22,28 @@ public class PlayerController : MonoBehaviour
     Vector3 lastSpeed = Vector3.zero;
     Vector3 lastDirection = Vector3.zero;
 
+    bool isHoldingTree = false;
+
+    float standardMovementMultiplier = 1;
+    float isHoldingTreeMoveMultiplier = 0.5f;
+
+    float CurrentMoveMultiplier { get => isHoldingTree ? isHoldingTreeMoveMultiplier : standardMovementMultiplier; }
+    public float RotationSpeedDegPerSec { get => rotationSpeedDegPerSec * CurrentMoveMultiplier; set => rotationSpeedDegPerSec = value; }
+    public float AccelUnitPerSec1 { get => AccelUnitPerSec * CurrentMoveMultiplier; set => AccelUnitPerSec = value; }
+    public float MaxSpeedUnitsPerSec { get => maxSpeedUnitsPerSec * CurrentMoveMultiplier; set => maxSpeedUnitsPerSec = value; }
+   
+
+    public void OnPickup(Vector3 SnapMove) 
+    {
+        transform.Translate(SnapMove);
+        isHoldingTree = true;
+    }
+
+    public void OnDrop()
+    {
+        isHoldingTree = false;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,17 +61,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //transform.Rotate(horizontalAxis * Vector3.up * rotationSpeedDegPerSec * Time.fixedDeltaTime);
-        //transform.Translate(verticalAxis * Vector3.forward * speedUnitPerSec * Time.fixedDeltaTime);
-
         float inputStrength = Mathf.Max(Mathf.Abs(horizontalAxis), Mathf.Abs(verticalAxis));
         Vector3 direction = new Vector3(horizontalAxis, 0, verticalAxis).normalized;
-        Vector3 change = direction * inputStrength * AccelUnitPerSec * Time.fixedDeltaTime;
+        Vector3 change = direction * inputStrength * AccelUnitPerSec1 * Time.fixedDeltaTime;
         Vector3 newSpeed = GetSpeedAfterDrag(lastSpeed) + change;
 
-        if (newSpeed.magnitude > maxSpeedUnitsPerSec)
+        if (newSpeed.magnitude > MaxSpeedUnitsPerSec)
         {
-            newSpeed = (newSpeed.normalized * maxSpeedUnitsPerSec);
+            newSpeed = (newSpeed.normalized * MaxSpeedUnitsPerSec);
         }
 
         transform.Translate(newSpeed * Time.fixedDeltaTime);
@@ -57,7 +76,7 @@ public class PlayerController : MonoBehaviour
         {
             
             Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-            Quaternion newRotation = Quaternion.RotateTowards(Body.transform.rotation, targetRotation, rotationSpeedDegPerSec * Time.fixedDeltaTime);
+            Quaternion newRotation = Quaternion.RotateTowards(Body.transform.rotation, targetRotation, RotationSpeedDegPerSec * Time.fixedDeltaTime);
             Body.transform.rotation = newRotation;
         }
 
@@ -76,7 +95,7 @@ public class PlayerController : MonoBehaviour
     {
 
         Vector3 change = Vector3.zero;
-        float dragLimit = AccelUnitPerSec * Time.fixedDeltaTime;
+        float dragLimit = AccelUnitPerSec1 * Time.fixedDeltaTime;
 
 
         if (

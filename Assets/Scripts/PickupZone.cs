@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickupZone : MonoBehaviour
 {
-    PlayerController playerController;
+    public PlayerController playerController;
 
     List<AppleTree> treesInZone = new List<AppleTree>();
 
@@ -22,17 +22,25 @@ public class PickupZone : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (heldTree != null)
+            if (heldTree != null) // Drop
             {
 
                 heldTree.SetIsHeld(false);
                 heldTree.transform.SetParent(null);
+                //heldTree.transform.Translate(Vector3.down * 0.5f);
                 heldTree = null;
+                playerController.OnDrop();
             }
 
-            else if (treesInZone.Count > 0)
+            else if (treesInZone.Count > 0) // Pickup
             {
+
+
                 heldTree = treesInZone[0];
+                Vector3 snapMove = heldTree.transform.position - transform.position;
+                playerController.OnPickup(snapMove);
+
+                //heldTree.transform.Translate(Vector3.up * 0.5f);
                 heldTree.SetIsHeld(true);
                 heldTree.transform.SetParent(transform);
             }
@@ -41,8 +49,6 @@ public class PickupZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-
         if (other.CompareTag("appletree"))
         {
             treesInZone.Add(other.GetComponent<AppleTree>());
