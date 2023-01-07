@@ -30,7 +30,10 @@ public class AppleTree : MonoBehaviour
     GameObject nextRotationObj;
 
 
-
+    public void SetIsHeld(bool newIsHeld)
+    {
+        this.isHeld = newIsHeld;
+    }
 
     IEnumerator UpdateTiltRoutine()
     {
@@ -81,22 +84,6 @@ public class AppleTree : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (isHeld)
-            {
-
-                isHeld = false;
-                transform.SetParent(null);
-            }
-
-            else if (touchingArmTransforms.Count > 0)
-            {
-                isHeld = true;
-                transform.SetParent(touchingArmTransforms[0].parent);
-            }
-        }
-
         if (isHeld)
         {
             nextAppleWait -= Time.deltaTime;

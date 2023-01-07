@@ -6,6 +6,8 @@ using UnityEditor;
 public class PlayerController : MonoBehaviour
 {
     public GameObject Body;
+    //public PickupZone PickupZone;
+
 
     float rotationSpeedDegPerSec = 720;
     float AccelUnitPerSec = 40f;
