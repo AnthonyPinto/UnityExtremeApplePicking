@@ -18,8 +18,8 @@ public class AppleTree : MonoBehaviour
 
 
 
+
     Vector3 prevPosition;
-    Vector3 latestPostion;
 
     float angleCheckRate = 0.1f;
     float maxTrunkAngle = 90f;
@@ -43,11 +43,8 @@ public class AppleTree : MonoBehaviour
 
             rotationAtLastCheck = transform.rotation;
 
-            float distanceTraveled = (latestPostion - prevPosition).magnitude;
+            float distanceTraveled = (transform.position - prevPosition).magnitude;
             float speed = distanceTraveled / angleCheckRate;
-            //Debug.Log("dist: " + distanceTraveled + " | speed: " + speed);
-            //Debug.Log("prevPos :" + prevPosition + " | newPos: " + transform.position);
-
             float percentOfMaxAngle = Mathf.Max(speed / maxTrunkAngleSpeed) / maxTrunkAngleSpeed;
             float angleToApply = maxTrunkAngle * percentOfMaxAngle;
 
@@ -61,8 +58,7 @@ public class AppleTree : MonoBehaviour
             nextRotationObj.transform.localEulerAngles = newAngles;
 
 
-            prevPosition = latestPostion;
-            latestPostion = transform.position;
+            prevPosition = transform.position;
             timeOfLastCheck = Time.time;
 
         }
@@ -76,7 +72,6 @@ public class AppleTree : MonoBehaviour
         nextRotationObj = new GameObject();
 
         prevPosition = transform.position;
-        latestPostion = transform.position;
 
         StartCoroutine(UpdateTiltRoutine());
     }
