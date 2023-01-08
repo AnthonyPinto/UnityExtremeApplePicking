@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class AppleTree : MonoBehaviour
 {
@@ -80,11 +79,6 @@ public class AppleTree : MonoBehaviour
             timeOfLastCheck = Time.time;
 
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Handles.DrawLine(transform.position, prevPosition);
     }
 
 

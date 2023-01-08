@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class PlayerController : MonoBehaviour
 {
     public GameObject Body;
     //public PickupZone PickupZone;
 
+    bool isEnabled = false;
 
     float rotationSpeedDegPerSec = 720;
     float AccelUnitPerSec = 40f;
@@ -32,6 +32,16 @@ public class PlayerController : MonoBehaviour
     public float AccelUnitPerSec1 { get => AccelUnitPerSec * CurrentMoveMultiplier; set => AccelUnitPerSec = value; }
     public float MaxSpeedUnitsPerSec { get => maxSpeedUnitsPerSec * CurrentMoveMultiplier; set => maxSpeedUnitsPerSec = value; }
    
+
+    public void OnGameStart()
+    {
+        isEnabled = true;
+    }
+
+    public void OnGameOver()
+    {
+        isEnabled = false;
+    }
 
     public void OnPickup(Vector3 SnapMove) 
     {
@@ -61,6 +71,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isEnabled)
+        {
+            return;
+        }
+
         float inputStrength = Mathf.Max(Mathf.Abs(horizontalAxis), Mathf.Abs(verticalAxis));
         Vector3 direction = new Vector3(horizontalAxis, 0, verticalAxis).normalized;
         Vector3 change = direction * inputStrength * AccelUnitPerSec1 * Time.fixedDeltaTime;
@@ -83,11 +98,6 @@ public class PlayerController : MonoBehaviour
         lastInputStrength = inputStrength;
         lastSpeed = newSpeed;
         lastDirection = direction;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Handles.DrawLine(transform.position, transform.position + lastDirection);
     }
 
     // Add brakes if no longer going a direction

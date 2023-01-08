@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class PickupZone : MonoBehaviour
 {
@@ -52,11 +51,6 @@ public class PickupZone : MonoBehaviour
                 heldTree.transform.SetParent(transform);
             }
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Handles.DrawLine(transform.position, transform.position + (transform.position - playerController.gameObject.transform.position).normalized);
     }
 
     private void OnTriggerEnter(Collider other)
