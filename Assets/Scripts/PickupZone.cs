@@ -51,6 +51,21 @@ public class PickupZone : MonoBehaviour
                 heldTree.transform.SetParent(transform);
             }
         }
+
+        if (heldTree != null)
+        {
+            if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
+            {
+                heldTree.SetIsShaking(true);
+            } else
+            {
+                heldTree.SetIsShaking(false);
+            }
+
+
+        }
+
+
     }
 
     private void OnTriggerEnter(Collider other)

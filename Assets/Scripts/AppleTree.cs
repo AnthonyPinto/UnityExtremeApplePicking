@@ -10,6 +10,7 @@ public class AppleTree : MonoBehaviour
     public List<GameObject> AllLeaves;
 
     bool isHeld = false;
+    bool isShaking = false;
     bool isLaunched = false;
     Vector3 launchRotationPerSecond = new Vector3(720, 0, 0);
     Vector3 launchDeltaPerSecond = new Vector3(0, 15, 45);
@@ -29,8 +30,9 @@ public class AppleTree : MonoBehaviour
 
     int applesDropped = 0;
 
-    float dropSlowdownStep = 0.5f;
+    float dropSlowdownStep = 1f;
 
+    float shakingDropSpeedMultiplier = 10;
 
 
 
@@ -59,6 +61,11 @@ public class AppleTree : MonoBehaviour
         {
             leaves.transform.SetParent(Trunk.transform);
         }
+    }
+
+    public void SetIsShaking(bool newIsShaking)
+    {
+        isShaking = newIsShaking;
     }
 
     IEnumerator UpdateTiltRoutine()
@@ -115,7 +122,12 @@ public class AppleTree : MonoBehaviour
             return;
         }
 
-        distanceToNextAppleDrop -= Vector3.Distance(posLastFrame, transform.position);
+        float distanceToReduce = Vector3.Distance(posLastFrame, transform.position);
+        if (isShaking)
+        {
+            distanceToReduce *= shakingDropSpeedMultiplier;
+        }
+        distanceToNextAppleDrop -= distanceToReduce;
         if (distanceToNextAppleDrop <= 0)
         {
             SpawnApple();
