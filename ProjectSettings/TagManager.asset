@@ -6,6 +6,7 @@ TagManager:
   tags:
   - arm
   - appletree
+  - apple
   layers:
   - Default
   - TransparentFX
