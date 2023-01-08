@@ -13,7 +13,7 @@ public class AppleTree : MonoBehaviour
     bool isHeld = false;
     bool isLaunched = false;
     Vector3 launchRotationPerSecond = new Vector3(720, 0, 0);
-    Vector3 launchDeltaPerSecond = new Vector3(0, 30, 45);
+    Vector3 launchDeltaPerSecond = new Vector3(0, 15, 45);
 
     List<Transform> touchingArmTransforms = new List<Transform>();
 
