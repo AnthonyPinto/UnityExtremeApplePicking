@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnPickup(Vector3 SnapMove) 
     {
-        transform.Translate(SnapMove);
+        transform.Translate(new Vector3(SnapMove.x, 0, SnapMove.z));
         isHoldingTree = true;
     }
 
