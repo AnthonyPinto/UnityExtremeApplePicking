@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent onGameStartEvent;
 
     float remainingStartTimer = 6;
-    float remainingGameTimer = 31;
+    float remainingGameTimer = 61;
 
 
     int score = 0;
