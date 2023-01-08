@@ -17,5 +17,10 @@ public class Arms : MonoBehaviour
         {
             animator.SetBool("shake", false);
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.SetTrigger("toss");
+        }
     }
 }

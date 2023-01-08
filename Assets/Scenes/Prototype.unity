@@ -4665,31 +4665,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5756392816097774520, guid: 4f9dc606a38d6c04e9f326903b7c47c7,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.38268343
-      objectReference: {fileID: 0}
-    - target: {fileID: 5756392816097774520, guid: 4f9dc606a38d6c04e9f326903b7c47c7,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5756392816097774520, guid: 4f9dc606a38d6c04e9f326903b7c47c7,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.92387956
-      objectReference: {fileID: 0}
-    - target: {fileID: 5756392816097774520, guid: 4f9dc606a38d6c04e9f326903b7c47c7,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5756392816097774520, guid: 4f9dc606a38d6c04e9f326903b7c47c7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 135
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f9dc606a38d6c04e9f326903b7c47c7, type: 3}
 --- !u!4 &1221355230 stripped

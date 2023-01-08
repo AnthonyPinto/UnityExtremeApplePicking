@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
     public void OnThrow(Vector3 direction)
     {
         isHoldingTree = false;
-        lastVelocity -= direction * maxSpeedUnitsPerSec; // Knockback
+        lastVelocity -= new Vector3(direction.x, 0, direction.y) * maxSpeedUnitsPerSec; // Knockback
     }
 
     public void SetIsShaking(bool newIsShaking)
