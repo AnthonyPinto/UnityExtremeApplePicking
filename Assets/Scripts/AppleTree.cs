@@ -7,8 +7,14 @@ public class AppleTree : MonoBehaviour
 {
     public GameObject ApplePrefab;
     public Transform AppleSpawnPoint;
+    public GameObject Trunk;
+    public List<GameObject> AllLeaves;
 
     bool isHeld = false;
+    bool isLaunched = false;
+    Vector3 launchRotationPerSecond = new Vector3(720, 0, 0);
+    Vector3 launchDeltaPerSecond = new Vector3(0, 30, 45);
+
     List<Transform> touchingArmTransforms = new List<Transform>();
 
     float nextAppleWait = 0;
@@ -36,9 +42,19 @@ public class AppleTree : MonoBehaviour
         this.isHeld = newIsHeld;
     }
 
+    public void OnLaunched(Vector3 launchDirection)
+    {
+        isLaunched = true;
+        transform.LookAt((transform.position + launchDirection));
+        foreach (GameObject leaves in AllLeaves)
+        {
+            leaves.transform.SetParent(Trunk.transform);
+        }
+    }
+
     IEnumerator UpdateTiltRoutine()
     {
-        while (true)
+        while (!isLaunched)
         {
             yield return new WaitForSeconds(angleCheckRate);
 
@@ -86,6 +102,14 @@ public class AppleTree : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isLaunched)
+        {
+            transform.Translate(launchDeltaPerSecond * Time.deltaTime);
+            Trunk.transform.Rotate(launchRotationPerSecond * Time.deltaTime);
+
+            return;
+        }
+
         if (isHeld)
         {
             nextAppleWait -= Time.deltaTime;

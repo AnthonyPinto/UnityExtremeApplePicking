@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class PickupZone : MonoBehaviour
 {
@@ -25,14 +26,17 @@ public class PickupZone : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (heldTree != null) // Drop
+            if (heldTree != null) // Launch
             {
+                Vector3 launchDirection = (transform.position - playerController.gameObject.transform.position).normalized;
+
 
                 heldTree.SetIsHeld(false);
                 heldTree.transform.SetParent(null);
-                heldTree.transform.Translate(Vector3.down * liftHeight);
+                heldTree.OnLaunched(launchDirection);
                 heldTree = null;
                 playerController.OnDrop();
+
             }
 
             else if (treesInZone.Count > 0) // Pickup
@@ -48,6 +52,11 @@ public class PickupZone : MonoBehaviour
                 heldTree.transform.SetParent(transform);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Handles.DrawLine(transform.position, transform.position + (transform.position - playerController.gameObject.transform.position).normalized);
     }
 
     private void OnTriggerEnter(Collider other)
