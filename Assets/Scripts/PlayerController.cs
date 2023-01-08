@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     float rawVerticalAxis = 0;
 
     float lastInputStrength = 0;
-    Vector3 lastSpeed = Vector3.zero;
+    Vector3 lastVelocity = Vector3.zero;
     Vector3 lastDirection = Vector3.zero;
 
     bool isHoldingTree = false;
@@ -59,9 +59,10 @@ public class PlayerController : MonoBehaviour
         isHoldingTree = true;
     }
 
-    public void OnDrop()
+    public void OnThrow(Vector3 direction)
     {
         isHoldingTree = false;
+        lastVelocity -= direction * maxSpeedUnitsPerSec; // Knockback
     }
 
     public void SetIsShaking(bool newIsShaking)
@@ -94,14 +95,14 @@ public class PlayerController : MonoBehaviour
         float inputStrength = Mathf.Max(Mathf.Abs(horizontalAxis), Mathf.Abs(verticalAxis));
         Vector3 direction = new Vector3(horizontalAxis, 0, verticalAxis).normalized;
         Vector3 change = direction * inputStrength * AccelUnitPerSec1 * Time.fixedDeltaTime;
-        Vector3 newSpeed = GetSpeedAfterDrag(lastSpeed) + change;
+        Vector3 newVelocity = GetSpeedAfterDrag(lastVelocity) + change;
 
-        if (newSpeed.magnitude > MaxSpeedUnitsPerSec)
+        if (newVelocity.magnitude > MaxSpeedUnitsPerSec)
         {
-            newSpeed = (newSpeed.normalized * MaxSpeedUnitsPerSec);
+            newVelocity = (newVelocity.normalized * MaxSpeedUnitsPerSec);
         }
 
-        transform.Translate(newSpeed * Time.fixedDeltaTime);
+        transform.Translate(newVelocity * Time.fixedDeltaTime);
         if (inputStrength > 0 && inputStrength >= lastInputStrength)
         {
             
@@ -111,7 +112,7 @@ public class PlayerController : MonoBehaviour
         }
 
         lastInputStrength = inputStrength;
-        lastSpeed = newSpeed;
+        lastVelocity = newVelocity;
         lastDirection = direction;
     }
 

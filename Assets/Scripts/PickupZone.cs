@@ -34,7 +34,7 @@ public class PickupZone : MonoBehaviour
                 heldTree.transform.SetParent(null);
                 heldTree.OnLaunched(launchDirection);
                 heldTree = null;
-                playerController.OnDrop();
+                playerController.OnThrow(launchDirection);
 
             }
 
