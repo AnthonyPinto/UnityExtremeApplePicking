@@ -23,11 +23,21 @@ public class PlayerController : MonoBehaviour
     Vector3 lastDirection = Vector3.zero;
 
     bool isHoldingTree = false;
+    bool isShaking = false;
 
     float standardMovementMultiplier = 1;
     float isHoldingTreeMoveMultiplier = 0.5f;
+    float isShakingMoveMultiplier = 0.75f;
 
-    float CurrentMoveMultiplier { get => isHoldingTree ? isHoldingTreeMoveMultiplier : standardMovementMultiplier; }
+    float CurrentMoveMultiplier { 
+        get => isHoldingTree ?
+            isShaking ?
+                isHoldingTreeMoveMultiplier * isShakingMoveMultiplier
+                : isHoldingTreeMoveMultiplier
+            : isShaking ?
+                isShakingMoveMultiplier
+                : standardMovementMultiplier;
+    }
     public float RotationSpeedDegPerSec { get => rotationSpeedDegPerSec * CurrentMoveMultiplier; set => rotationSpeedDegPerSec = value; }
     public float AccelUnitPerSec1 { get => AccelUnitPerSec * CurrentMoveMultiplier; set => AccelUnitPerSec = value; }
     public float MaxSpeedUnitsPerSec { get => maxSpeedUnitsPerSec * CurrentMoveMultiplier; set => maxSpeedUnitsPerSec = value; }
@@ -52,6 +62,11 @@ public class PlayerController : MonoBehaviour
     public void OnDrop()
     {
         isHoldingTree = false;
+    }
+
+    public void SetIsShaking(bool newIsShaking)
+    {
+        isShaking = newIsShaking;
     }
 
     // Start is called before the first frame update

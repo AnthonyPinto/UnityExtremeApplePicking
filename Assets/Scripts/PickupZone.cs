@@ -62,7 +62,15 @@ public class PickupZone : MonoBehaviour
                 heldTree.SetIsShaking(false);
             }
 
+        }
 
+        if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
+        {
+            playerController.SetIsShaking(true);
+        }
+        else
+        {
+            playerController.SetIsShaking(false);
         }
 
 
