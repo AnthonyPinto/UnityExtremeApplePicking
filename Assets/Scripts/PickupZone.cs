@@ -10,6 +10,12 @@ public class PickupZone : MonoBehaviour
 
     AppleTree heldTree = null;
 
+    public AudioSource audioSource;
+
+
+    public AudioClip liftSound;
+    public AudioClip throwSound;
+
 
     const float liftHeight = 0.5f;
 
@@ -35,6 +41,7 @@ public class PickupZone : MonoBehaviour
                 heldTree.OnLaunched(launchDirection);
                 heldTree = null;
                 playerController.OnThrow(launchDirection);
+                audioSource.PlayOneShot(throwSound);
 
             }
 
@@ -49,6 +56,7 @@ public class PickupZone : MonoBehaviour
                 heldTree.transform.Translate(Vector3.up * liftHeight);
                 heldTree.SetIsHeld(true);
                 heldTree.transform.SetParent(transform);
+                audioSource.PlayOneShot(liftSound);
             }
         }
 
