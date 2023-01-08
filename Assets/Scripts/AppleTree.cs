@@ -23,9 +23,19 @@ public class AppleTree : MonoBehaviour
 
 
 
+    float distanceToNextAppleDrop = 1;
+    float minDistanceBeforeDrop = .1f;
+    float maxDistanceBeforeDrop = 3f;
+
+    int applesDropped = 0;
+
+    float dropSlowdownStep = 0.5f;
 
 
-    Vector3 prevPosition;
+
+
+    Vector3 posAtLastAngleCheck;
+    Vector3 posLastFrame;
 
     float angleCheckRate = 0.1f;
     float maxTrunkAngle = 15f;
@@ -59,7 +69,7 @@ public class AppleTree : MonoBehaviour
 
             rotationAtLastCheck = transform.rotation;
             Vector3 horizontalPos = new Vector3(transform.position.x, 0, transform.position.z);
-            Vector3 prevHorizontalPos = new Vector3(prevPosition.x, 0, prevPosition.z);
+            Vector3 prevHorizontalPos = new Vector3(posAtLastAngleCheck.x, 0, posAtLastAngleCheck.z);
 
             float horizontalDistance = (horizontalPos - prevHorizontalPos).magnitude;
             float horizontalSpeed = horizontalDistance / angleCheckRate;
@@ -69,13 +79,13 @@ public class AppleTree : MonoBehaviour
             nextRotationObj.transform.SetPositionAndRotation(transform.position, transform.rotation);
 
 
-            nextRotationObj.transform.LookAt(new Vector3(prevPosition.x, transform.position.y, prevPosition.z));
+            nextRotationObj.transform.LookAt(new Vector3(posAtLastAngleCheck.x, transform.position.y, posAtLastAngleCheck.z));
             Vector3 newAngles = nextRotationObj.transform.localEulerAngles;
             newAngles.x = angleToApply;
             nextRotationObj.transform.localEulerAngles = newAngles;
 
 
-            prevPosition = transform.position;
+            posAtLastAngleCheck = transform.position;
             timeOfLastCheck = Time.time;
 
         }
@@ -88,7 +98,8 @@ public class AppleTree : MonoBehaviour
     {
         nextRotationObj = new GameObject();
 
-        prevPosition = transform.position;
+        posAtLastAngleCheck = transform.position;
+        posLastFrame = transform.position;
 
         StartCoroutine(UpdateTiltRoutine());
     }
@@ -104,33 +115,29 @@ public class AppleTree : MonoBehaviour
             return;
         }
 
-        if (isHeld)
+        distanceToNextAppleDrop -= Vector3.Distance(posLastFrame, transform.position);
+        if (distanceToNextAppleDrop <= 0)
         {
-            nextAppleWait -= Time.deltaTime;
-
-            if (nextAppleWait <= 0)
-            {
-                SpawnApples();
-                nextAppleWait = Random.Range(minAppleDelay, maxAppleDelay);
-            }
+            SpawnApple();
         }
+
+        posLastFrame = transform.position;
 
         float timeSinceLastCheck = Time.time - timeOfLastCheck;
         float percentComplete = (timeSinceLastCheck / angleCheckRate);
 
 
         transform.rotation = Quaternion.Slerp(rotationAtLastCheck, nextRotationObj.transform.rotation, percentComplete);
-
     }
 
-    void SpawnApples()
+    void SpawnApple()
     {
-        int appleCount = Random.Range(1, maxSimultaneousApples + 1);
+        Vector3 offset = (new Vector3(Random.value, 0, Random.value).normalized) * Random.value * 2;
 
-        for (int i = 0; i < appleCount; i++)
-        {
-            Instantiate(ApplePrefab, AppleSpawnPoint.position, ApplePrefab.transform.rotation);
-        }
+        Instantiate(ApplePrefab, AppleSpawnPoint.position + offset, ApplePrefab.transform.rotation);
+        float delay = dropSlowdownStep * applesDropped;
+        distanceToNextAppleDrop = Random.Range(minDistanceBeforeDrop, maxDistanceBeforeDrop) + delay;
+        applesDropped++;
     }
 
     private void OnTriggerEnter(Collider other)

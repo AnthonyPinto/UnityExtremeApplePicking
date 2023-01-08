@@ -9,7 +9,7 @@ public class Apple : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb.AddForce(new Vector3(Random.value, Random.value, Random.value));
+        //rb.AddForce(new Vector3(Random.value, Random.value, Random.value));
     }
 
     // Update is called once per frame
