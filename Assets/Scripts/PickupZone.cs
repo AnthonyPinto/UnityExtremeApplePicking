@@ -11,6 +11,9 @@ public class PickupZone : MonoBehaviour
     AppleTree heldTree = null;
 
 
+    const float liftHeight = 0.5f;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +30,7 @@ public class PickupZone : MonoBehaviour
 
                 heldTree.SetIsHeld(false);
                 heldTree.transform.SetParent(null);
-                //heldTree.transform.Translate(Vector3.down * 0.5f);
+                heldTree.transform.Translate(Vector3.down * liftHeight);
                 heldTree = null;
                 playerController.OnDrop();
             }
@@ -40,7 +43,7 @@ public class PickupZone : MonoBehaviour
                 Vector3 snapMove = heldTree.transform.position - transform.position;
                 playerController.OnPickup(snapMove);
 
-                //heldTree.transform.Translate(Vector3.up * 0.5f);
+                heldTree.transform.Translate(Vector3.up * liftHeight);
                 heldTree.SetIsHeld(true);
                 heldTree.transform.SetParent(transform);
             }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class AppleTree : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class AppleTree : MonoBehaviour
     Vector3 prevPosition;
 
     float angleCheckRate = 0.1f;
-    float maxTrunkAngle = 90f;
+    float maxTrunkAngle = 15f;
     float maxTrunkAngleSpeed = 5;
 
     float timeOfLastCheck = 0;
@@ -42,17 +43,18 @@ public class AppleTree : MonoBehaviour
             yield return new WaitForSeconds(angleCheckRate);
 
             rotationAtLastCheck = transform.rotation;
+            Vector3 horizontalPos = new Vector3(transform.position.x, 0, transform.position.z);
+            Vector3 prevHorizontalPos = new Vector3(prevPosition.x, 0, prevPosition.z);
 
-            float distanceTraveled = (transform.position - prevPosition).magnitude;
-            float speed = distanceTraveled / angleCheckRate;
-            float percentOfMaxAngle = Mathf.Max(speed / maxTrunkAngleSpeed) / maxTrunkAngleSpeed;
+            float horizontalDistance = (horizontalPos - prevHorizontalPos).magnitude;
+            float horizontalSpeed = horizontalDistance / angleCheckRate;
+            float percentOfMaxAngle = Mathf.Min(horizontalSpeed, maxTrunkAngleSpeed) / maxTrunkAngleSpeed;
             float angleToApply = maxTrunkAngle * percentOfMaxAngle;
-
 
             nextRotationObj.transform.SetPositionAndRotation(transform.position, transform.rotation);
 
 
-            nextRotationObj.transform.LookAt(prevPosition);
+            nextRotationObj.transform.LookAt(new Vector3(prevPosition.x, transform.position.y, prevPosition.z));
             Vector3 newAngles = nextRotationObj.transform.localEulerAngles;
             newAngles.x = angleToApply;
             nextRotationObj.transform.localEulerAngles = newAngles;
@@ -62,6 +64,11 @@ public class AppleTree : MonoBehaviour
             timeOfLastCheck = Time.time;
 
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Handles.DrawLine(transform.position, prevPosition);
     }
 
 
